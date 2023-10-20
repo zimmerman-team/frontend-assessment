@@ -80,7 +80,6 @@ router.get('/api/data', function(req, res, next) {
             const transaction = {
               value: activity.transaction_value[i],
               date: activity.transaction_date_iso_date[i],
-              ref: activity.transaction_type[i],
             };
             newObject.transactions.push(transaction);
           }
