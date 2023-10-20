@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const request = require('request');
 
-const DATA_ROWS = 1000;
+const DATA_ROWS = 1;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -20,7 +20,7 @@ router.get('/api/data', function(req, res, next) {
       
       const data = [];
       for (const activity of activities) {
-        // create the new object and add the base fields
+        // create the new object and add t he base fields
         const newObject = {
           iati_identifier: activity.iati_identifier,
           hierarchy: activity.hierarchy,
@@ -36,6 +36,9 @@ router.get('/api/data', function(req, res, next) {
           description: activity.description_narrative,
           participating_orgs: [],
           activity_date: [],
+          transactions: [],
+          recipient_country: [],
+          recipient_region: [],
         };
 
         // clear single value arrays
@@ -70,13 +73,52 @@ router.get('/api/data', function(req, res, next) {
           // do nothing
         }
 
+        // transactions
+        try {
+          for (let i = 0; i < activity.transaction_value.length; i++) {
+            const transaction = {
+              value: activity.transaction_value[i],
+              date: activity.transaction_date_iso_date[i],
+              ref: activity.transaction_type[i],
+            };
+            newObject.transactions.push(transaction);
+          }
+        } catch {
+          // do nothing
+        }
+
+        // recipient country
+        try {
+          for (let i = 0; i < activity.recipient_country_code.length; i++) {
+            const country = {
+              code: activity.recipient_country_code[i],
+              percentage: activity.recipient_country_percentage[i],
+            };
+            newObject.recipient_country.push(country);
+          }
+        } catch {
+          // do nothing
+        }
+
+        // recipient region
+        try {
+          for (let i = 0; i < activity.recipient_region_code.length; i++) {
+            const region = {
+              code: activity.recipient_region_code[i],
+              percentage: activity.recipient_region_percentage[i],
+            };
+            newObject.recipient_region.push(region);
+          }
+        } catch {
+          // do nothing
+        }
+
         data.push(newObject);
       }
+      res.set('Access-Control-Allow-Origin', 'http://localhost:3000')
       res.send(data);
     }
   });
 });
-
-
 
 module.exports = router;
