@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const request = require('request');
 
-const DATA_ROWS = 1;
+const DATA_ROWS = 10000;
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 
 /* GET IATI Activity data. */
 router.get('/api/data', function(req, res, next) {
-  const url = "https://datastore.iati.cloud/api/v2/activity/?indent=true&q.op=OR&q=iati_identifier%3A*&rows="+DATA_ROWS+"&fl=*";
+  const url = "https://datastore.iati.cloud/api/v2/activity/?indent=true&q.op=OR&q=iati_identifier%3A*&start=50000&rows=" + DATA_ROWS + "&fl=iati_identifier,hierarchy,activity_status,default_currency,default_language,reporting_org_ref,reporting_org_narrative,reporting_org_type_code,title_narrative,description_narrative,participating_org_type,participating_org_ref,participating_org_narrative,participating_org_role,activity_date_iso_date,activity_date_type,transaction_value,transaction_date_iso_date,transaction_type,recipient_country_code,recipient_country_percentage,recipient_region_code,recipient_region_percentage,budget_value,budget_period_start_iso_date,budget_period_end_iso_date";
   request(url, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       // console log all the keys in the body
@@ -39,6 +39,7 @@ router.get('/api/data', function(req, res, next) {
           transactions: [],
           recipient_country: [],
           recipient_region: [],
+          budget: [],
         };
 
         // clear single value arrays
@@ -108,6 +109,20 @@ router.get('/api/data', function(req, res, next) {
               percentage: activity.recipient_region_percentage[i],
             };
             newObject.recipient_region.push(region);
+          }
+        } catch {
+          // do nothing
+        }
+
+        // budget
+        try {
+          for (let i = 0; i < activity.budget_value.length; i++) {
+            const budget = {
+              value: activity.budget_value[i],
+              period_start: activity.budget_period_start_iso_date[i],
+              period_end: activity.budget_period_end_iso_date[i],
+            };
+            newObject.budget.push(budget);
           }
         } catch {
           // do nothing
