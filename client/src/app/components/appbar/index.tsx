@@ -9,12 +9,7 @@ import { Link as RouteLink } from "react-router-dom";
 
 export function AppBar() {
   return (
-    <MuiAppBar
-      position="fixed"
-      sx={{
-        height: "71px",
-      }}
-    >
+    <MuiAppBar position="fixed">
       <Container maxWidth="lg" disableGutters>
         <Toolbar disableGutters>
           <Box

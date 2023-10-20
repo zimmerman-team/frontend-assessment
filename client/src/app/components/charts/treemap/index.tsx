@@ -1,8 +1,6 @@
 import React from "react";
-import find from "lodash/find";
 import Box from "@mui/material/Box";
 import * as echarts from "echarts/core";
-import ReactDOMServer from "react-dom/server";
 import { TreemapSeriesOption } from "echarts";
 import { SVGRenderer } from "echarts/renderers";
 import { TreemapChart as EchartsTreemap } from "echarts/charts";
@@ -23,7 +21,9 @@ export function TreemapChart(props: TreemapChartProps) {
         renderer: "svg",
       });
 
-      const option: echarts.ComposeOption<TreemapSeriesOption> = {
+      const option: echarts.ComposeOption<
+        TreemapSeriesOption | TooltipComponentOption
+      > = {
         series: {
           top: 0,
           left: 0,
@@ -47,11 +47,14 @@ export function TreemapChart(props: TreemapChartProps) {
             borderColor: "#fff",
           },
         },
+        tooltip: {
+          showContent: true,
+        },
       };
 
       chart.setOption(option);
     }
-  }, [containerRef.current]);
+  }, [containerRef.current, props.data]);
 
   return (
     <Box

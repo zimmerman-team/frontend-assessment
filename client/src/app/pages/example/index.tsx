@@ -1,7 +1,8 @@
 import React from "react";
+import get from "lodash/get";
+import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
 import groupBy from "lodash/groupBy";
-import isArray from "lodash/isArray";
 import { AppBar } from "app/components/appbar";
 import { PageLoader } from "app/components/pageLoader";
 import { TreemapChart } from "app/components/charts/treemap";
@@ -22,13 +23,15 @@ export function ExamplePage() {
   }, []);
 
   React.useEffect(() => {
-    if (!data && !isArray(data)) return;
+    if (!data) return;
     const updatedData: TreemapDataItem[] = [];
-    const groupedByReporter = groupBy(data, "reporting_org.ref");
-    Object.keys(groupedByReporter).forEach((ref) => {
+    const groupedBy = groupBy(data, "reporting_org.ref");
+    Object.keys(groupedBy).forEach((key) => {
       updatedData.push({
-        name: ref,
-        value: groupedByReporter[ref].length,
+        name: key,
+        value: sumBy(groupedBy[key], (item) =>
+          sumBy(get(item, "transactions", []), "value")
+        ),
       });
     });
     setChartData(updatedData);

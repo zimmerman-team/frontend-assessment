@@ -54,6 +54,24 @@ export interface ApiResponseModel {
     iso_date: string;
     ref: string;
   }[];
+  activity_status: string;
+  recipient_country: {
+    code: string;
+    percentage: number;
+  }[];
+  recipient_region: {
+    code: string;
+    percentage: number;
+  }[];
+  transactions: {
+    value: number;
+    date: string;
+  }[];
+  budget: {
+    value: number;
+    period_start: string;
+    period_end: string;
+  }[];
 }
 
 export type ApiCallModel = ApiModel<
