@@ -30,7 +30,15 @@ function AppContainer(props: ProviderProps) {
     return <PageLoader />;
   }
   return (
-    <Container maxWidth="lg" disableGutters>
+    <Container
+      maxWidth="lg"
+      disableGutters
+      sx={{
+        "@media (max-width: 1280px)": {
+          padding: "0 24px",
+        },
+      }}
+    >
       {props.children}
     </Container>
   );

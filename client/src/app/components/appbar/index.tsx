@@ -10,7 +10,15 @@ import { Link as RouteLink } from "react-router-dom";
 export function AppBar() {
   return (
     <MuiAppBar position="fixed">
-      <Container maxWidth="lg" disableGutters>
+      <Container
+        maxWidth="lg"
+        disableGutters
+        sx={{
+          "@media (max-width: 1280px)": {
+            padding: "0 24px",
+          },
+        }}
+      >
         <Toolbar disableGutters>
           <Box
             sx={{
@@ -25,6 +33,9 @@ export function AppBar() {
               variant="h5"
               sx={{
                 color: "#fff",
+                "@media (max-width: 768px)": {
+                  fontSize: "1rem",
+                },
               }}
             >
               Zimmerman's Frontend Assesment

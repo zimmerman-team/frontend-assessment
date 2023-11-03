@@ -4,6 +4,7 @@ import sumBy from "lodash/sumBy";
 import Box from "@mui/material/Box";
 import groupBy from "lodash/groupBy";
 import { AppBar } from "app/components/appbar";
+import Typography from "@mui/material/Typography";
 import { PageLoader } from "app/components/pageLoader";
 import { TreemapChart } from "app/components/charts/treemap";
 import { TreemapDataItem } from "app/components/charts/treemap/data";
@@ -39,9 +40,15 @@ export function ExamplePage() {
 
   return (
     <Box>
-      <AppBar />
-      <Box sx={{ height: "150px" }} />
       {loading && <PageLoader />}
+      <AppBar />
+      <Box sx={{ height: "100px" }} />
+      <Typography variant="h2">Example with Treemap</Typography>
+      <Typography variant="subtitle1">
+        This is an example using the Treemap chart from the Echarts library to
+        display data from the locally run API.
+      </Typography>
+      <Box sx={{ height: "20px" }} />
       <TreemapChart data={chartData} />
     </Box>
   );

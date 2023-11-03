@@ -14,11 +14,12 @@ export function HomePage() {
         task is to complete the following steps:
       </Typography>
       <ul>
-        <li>Fork and clone the repository</li>
-        <li>Install the required packages</li>
         <li>
           Make an API call using the provided endpoint in the middleware (check
-          server folder) or create one yourself using iati.cloud
+          server folder) or create one yourself using{" "}
+          <a href="https://iati.cloud" target="_blank" rel="noreferrer">
+            iati.cloud
+          </a>
         </li>
         <li>
           Make use of the Easy-Peasy state manager in managing and controlling
@@ -32,7 +33,18 @@ export function HomePage() {
           <li>Sankey chart</li>
           <li>Line chart</li>
           <li>Bar chart</li>
+          <li>
+            Or any other chart of your choice from the{" "}
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://echarts.apache.org/en/index.html"
+            >
+              Echart library
+            </a>
+          </li>
         </ul>
+        <li>Make sure to create a new page & route to display your chart</li>
         <li>
           Ensure that the components in your application are responsive to
           different screen sizes
