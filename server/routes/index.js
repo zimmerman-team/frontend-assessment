@@ -3,7 +3,6 @@ const router = express.Router();
 const request = require("request");
 
 const DATA_ROWS = 1000;
-const DATA_ROWS_FOR_RELATED_DATA = 100;
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -68,7 +67,7 @@ router.get("/api/data", function (req, res, next) {
 router.get("/api/data-related", function (req, res, next) {
   const url =
     "https://datastore.iati.cloud/api/v2/activity/?indent=true&q.op=OR&q=related_activity_ref%3A*&start=50000&rows=" +
-    DATA_ROWS_FOR_RELATED_DATA +
+    DATA_ROWS +
     "&fl=iati_identifier,hierarchy,activity_status,default_currency,default_language,related_activity_*,reporting_org_ref,reporting_org_narrative,reporting_org_type_code,title_narrative,description_narrative,participating_org_type,participating_org_ref,participating_org_narrative,participating_org_role,activity_date_iso_date,activity_date_type,transaction_value,transaction_date_iso_date,transaction_type,recipient_country_code,recipient_country_percentage,recipient_region_code,recipient_region_percentage,budget_value,budget_period_start_iso_date,budget_period_end_iso_date";
 
   request(url, function (error, response, body) {

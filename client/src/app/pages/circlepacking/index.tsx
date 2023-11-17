@@ -13,9 +13,6 @@ export function CirclePackingChartPage() {
   const [chartData, setChartData] = React.useState<
     CirclePackingChartDataItem[]
   >([]);
-  const [chartData2, setChartData2] = React.useState<
-    CirclePackingChartDataItem[]
-  >([]);
   const data = useStoreState((state) => state.relatedDataApiCall.data);
   const loading = useStoreState((state) => state.relatedDataApiCall.loading);
   const fetchData = useStoreActions(
@@ -47,14 +44,15 @@ export function CirclePackingChartPage() {
       } else {
         parent = "head";
       }
-
-      if (parent && iati_identifiers.includes(parent)) {
-        cleanedData.push({
-          name: get(dataItem, "iati_identifier", ""),
-          value: sumBy(get(dataItem, "transactions", []), "value"),
-          parent: parent,
-        });
+      if (!parent || !iati_identifiers.includes(parent)) {
+        parent = "head";
       }
+
+      cleanedData.push({
+        name: get(dataItem, "iati_identifier", ""),
+        value: sumBy(get(dataItem, "transactions", []), "value"),
+        parent: parent,
+      });
     });
 
     setChartData(cleanedData);

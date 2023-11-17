@@ -15,20 +15,6 @@ import {
   VisualMapComponentOption,
 } from "echarts/components";
 
-const stratify = (data: CirclePackingChartDataItem[]) => {
-  return d3
-    .stratify<CirclePackingChartDataItem>()
-    .id((d) => d.name)
-    .parentId((d) => d.parent)(data)
-    .sum((d) => d.value || 0)
-    .sort((a, b) => {
-      if (b.value && a.value) {
-        return b.value - a.value;
-      }
-      return 0;
-    });
-};
-
 const convertData = (
   root: d3.HierarchyCircularNode<CirclePackingChartDataItem>
 ) => {
@@ -178,46 +164,71 @@ const interpolateColor = (
   }
 };
 
-export const drillDown = (
-  // To change the head to the node with the select path
-  data: CirclePackingChartDataItem[],
-  targetId: string | null,
+export const initChart = (
+  dataset: CirclePackingChartDataItem[],
+  chart: echarts.ECharts,
   width: number,
-  height: number,
-  chart: echarts.ECharts
+  height: number
 ) => {
-  const dataWithParent = data.filter((item) => {
-    if (item.name !== "head") {
-      return item.parent;
-    }
-    return true;
-  });
-  const items = dataWithParent.map((item) => item.name);
-  const checkData = data.filter((item) => {
-    if (item.name !== "head") {
-      return items.includes(item.parent);
-    }
-    return true;
-  });
+  const stratify = () => {
+    return d3
+      .stratify<CirclePackingChartDataItem>()
+      .id((d) => d.name)
+      .parentId((d) => d.parent)(dataset)
+      .sum((d) => d.value || 0)
+      .sort((a, b) => {
+        if (b.value && a.value) {
+          return b.value - a.value;
+        }
+        return 0;
+      });
+  };
 
-  let root = stratify(checkData);
-
-  if (targetId !== null) {
-    let y = root.descendants().find((node) => {
-      return node.data.name === targetId;
-    });
-    if (y) {
-      root = y;
-    }
-  }
-  root.data.parent = "";
-  root.parent = null;
-  // Reset
-
+  let root = stratify();
   d3.pack<CirclePackingChartDataItem>().size([width, height]).padding(3)(root);
+
   const option = getOptionForCirclepacking(
     convertData(root as d3.HierarchyCircularNode<CirclePackingChartDataItem>)
   );
 
   chart.setOption(option);
+
+  const drillDown = (
+    // To change the head to the node with the select path
+    targetId: string | null
+  ) => {
+    root = stratify();
+
+    if (targetId !== null) {
+      let y = root.descendants().find((node) => {
+        return node.data.name === targetId;
+      });
+      if (y) {
+        root = y;
+      }
+    }
+
+    root.parent = null;
+    // Reset
+
+    d3.pack<CirclePackingChartDataItem>().size([width, height]).padding(3)(
+      root
+    );
+    const option = getOptionForCirclepacking(
+      convertData(root as d3.HierarchyCircularNode<CirclePackingChartDataItem>)
+    );
+
+    chart.setOption(option);
+  };
+
+  chart.on("click", { seriesIndex: 0 }, (params: any) => {
+    drillDown(params.data.name);
+  });
+
+  // Reset: click on the blank area.
+  chart.getZr().on("click", function (event) {
+    if (!event.target) {
+      drillDown(null);
+    }
+  });
 };

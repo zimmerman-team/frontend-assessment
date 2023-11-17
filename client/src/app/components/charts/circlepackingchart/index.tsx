@@ -5,7 +5,7 @@ import { TooltipComponent, VisualMapComponent } from "echarts/components";
 import { CustomChart } from "echarts/charts";
 
 import { SVGRenderer } from "echarts/renderers";
-import { drillDown } from "./utils";
+import { initChart } from "./utils";
 import { CirclePackingChartProps } from "./data";
 
 echarts.use([TooltipComponent, CustomChart, SVGRenderer, VisualMapComponent]);
@@ -19,32 +19,7 @@ export function CirclePackingChart(props: CirclePackingChartProps) {
         renderer: "svg",
       });
 
-      drillDown(props.data, null, containerRef.current.clientWidth, 500, chart);
-
-      chart.on("click", { seriesIndex: 0 }, (params: any) => {
-        if (containerRef.current) {
-          drillDown(
-            props.data,
-            params.data.name,
-            containerRef.current.clientWidth,
-            500,
-            chart
-          );
-        }
-      });
-
-      // Reset: click on the blank area.
-      chart.getZr().on("click", function (event) {
-        if (!event.target && containerRef.current) {
-          drillDown(
-            props.data,
-            null,
-            containerRef.current.clientWidth,
-            500,
-            chart
-          );
-        }
-      });
+      initChart(props.data, chart, containerRef.current.clientWidth, 500);
     }
   }, [containerRef.current, props.data]);
 
