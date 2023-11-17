@@ -4,3 +4,7 @@ import { ApiCallModel } from "app/state/api/interfaces";
 export const exampleChartApiCall: ApiCallModel = {
   ...APIModel("http://localhost:4200/api/data"),
 };
+
+export const relatedDataApiCall: ApiCallModel = {
+  ...APIModel("http://localhost:4200/api/data-related"),
+};

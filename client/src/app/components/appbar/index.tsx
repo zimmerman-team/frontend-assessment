@@ -57,6 +57,24 @@ export function AppBar() {
                 Home
               </Link>
               <Link
+                to="/barchart"
+                component={RouteLink}
+                sx={{
+                  color: "#fff",
+                }}
+              >
+                Bar Chart
+              </Link>
+              <Link
+                to="/circlepackingchart"
+                component={RouteLink}
+                sx={{
+                  color: "#fff",
+                }}
+              >
+                CirclePacking Chart
+              </Link>
+              <Link
                 to="/example"
                 component={RouteLink}
                 sx={{

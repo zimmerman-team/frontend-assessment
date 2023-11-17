@@ -74,11 +74,19 @@ export interface ApiResponseModel {
   }[];
 }
 
+export interface RelatedApiResponseModel extends ApiResponseModel {
+  related_activity: {
+    ref: string;
+    type: string;
+  };
+}
+
 export type ApiCallModel = ApiModel<
   ApiCallParams | ApiCallParams[] | string,
-  ApiResponseModel
+  ApiResponseModel | RelatedApiResponseModel
 >;
 
 export interface StoreModel {
   exampleChartApiCall: ApiCallModel;
+  relatedDataApiCall: ApiCallModel;
 }
